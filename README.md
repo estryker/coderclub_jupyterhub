@@ -24,8 +24,13 @@ sudo python3 setup.py install
 
 * Copy in the Dockerfile from here into singleuser/
 * run: sudo docker build -t jupyterhub/singleuser singleuser
-* sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to 8443
-** Note that if you ever have to rebuild the docker image, run this to allow port 443 calls through (mainly with the gem installs)
+* Set up the iptables to redirect port 8443 traffic
+
+```
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to 8443
+```
+
+*Note that if you ever have to rebuild the docker image, run this to allow port 443 calls through (mainly with the gem installs)*
 
 First, get the rule that sets up the PREROUTING, probably line 2:
 
