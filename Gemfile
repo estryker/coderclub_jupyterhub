@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+gem 'iruby'
+gem 'nyaplot'
+gem 'ffi-rzmq'
+gem 'erector'
+gem 'sinatra'
+gem 'mimemagic'
+gem 'seconds'
+gem 'iruby_helpers'
+gem 'opt-simple'
+

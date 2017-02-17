@@ -23,7 +23,9 @@ RUN which curl
 # RUN apt-get install autoconf automake autotools-dev bison libbison-dev libffi-dev libgdbm-dev libncurses5-dev libreadline6-dev libsigsegv2 libssl-dev libssl-doc libtinfo-dev libyaml-dev m4 zlib1g-dev autoconf automake autotools-dev bison file libbison-dev libffi-dev libgdbm-dev libltdl-dev libmagic1 libncurses5-dev libreadline6-dev libsigsegv2 libssl-dev libssl-doc libtinfo-dev  libyaml-dev m4 zlib1g-dev file libltdl-dev libmagic1 libtool-bin javascript-common libgmp-dev libgmpxx4ldbl libjs-jquery libruby2.1 ruby ruby2.1 ruby-dev ruby2.1-dev rubygems-integration
 RUN apt-get -y install pkg-config libunwind-dev libruby2.1 ruby ruby2.1 ruby-dev ruby2.1-dev rubygems-integration libtool-bin autoconf automake
 RUN which ruby
-RUN gem install iruby nyaplot ffi-rzmq seconds sinatra --no-rdoc --no-ri
+RUN gem install iruby nyaplot ffi-rzmq seconds sinatra iruby_helpers erector mimemagic opt-simple bundler --no-rdoc --no-ri
+ADD Gemfile # for some reason iruby notebook needs gems installed by bundler
+RUN bundle install
 RUN gem uninstall rbczmq
 RUN iruby register --force 
 RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
@@ -43,13 +45,13 @@ RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
 #    && iruby register"
 
 # ENV PATH $PATH:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-#RUN which rvm 
+# RUN which rvm 
 # RUN echo "source /usr/local/rvm/scripts/rvm" >> /etc/profile
 
 
 # RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-RUN git clone https://github.com/zeromq/libzmq
-RUN cd libzmq; ./autogen.sh && ./configure && make && make check && make install
+RUN cd tmp; git clone https://github.com/zeromq/libzmq
+RUN cd /tmp/libzmq; ./autogen.sh && ./configure && make && make check && make install
 USER jovyan
 # smoke test that it's importable at least
 RUN sh /srv/singleuser/singleuser_ruby.sh -h
