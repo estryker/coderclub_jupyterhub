@@ -24,8 +24,6 @@ RUN which curl
 RUN apt-get -y install pkg-config libunwind-dev libruby2.1 ruby ruby2.1 ruby-dev ruby2.1-dev rubygems-integration libtool-bin autoconf automake
 RUN which ruby
 RUN gem install iruby nyaplot ffi-rzmq seconds sinatra iruby_helpers erector mimemagic opt-simple bundler --no-rdoc --no-ri
-ADD Gemfile # for some reason iruby notebook needs gems installed by bundler
-RUN bundle install
 RUN gem uninstall rbczmq
 RUN iruby register --force 
 RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
@@ -50,9 +48,11 @@ RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
 
 
 # RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-RUN cd tmp; git clone https://github.com/zeromq/libzmq
+RUN cd /tmp; git clone https://github.com/zeromq/libzmq
 RUN cd /tmp/libzmq; ./autogen.sh && ./configure && make && make check && make install
 USER jovyan
+ADD Gemfile /home/jovyan/ # for some reason iruby notebook needs gems installed by bundler
+RUN bundle install
 # smoke test that it's importable at least
 RUN sh /srv/singleuser/singleuser_ruby.sh -h
 CMD ["sh", "/srv/singleuser/singleuser_ruby.sh"]
