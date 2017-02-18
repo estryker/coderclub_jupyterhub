@@ -51,7 +51,7 @@ RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
 RUN cd /tmp; git clone https://github.com/zeromq/libzmq
 RUN cd /tmp/libzmq; ./autogen.sh && ./configure && make && make check && make install
 USER jovyan
-ADD Gemfile /home/jovyan/ # for some reason iruby notebook needs gems installed by bundler
+ADD Gemfile /home/jovyan/ 
 RUN bundle install
 # smoke test that it's importable at least
 RUN sh /srv/singleuser/singleuser_ruby.sh -h
