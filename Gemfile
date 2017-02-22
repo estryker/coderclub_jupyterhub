@@ -8,4 +8,4 @@ gem 'mimemagic'
 gem 'seconds'
 gem 'iruby_helpers'
 gem 'opt-simple'
-
+gem 'github_api'
