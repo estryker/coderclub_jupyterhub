@@ -35,6 +35,8 @@ RUN chown -R jovyan:users  /home/jovyan/.ipython/ #  kernels/ruby
 USER jovyan
 ADD Gemfile /home/jovyan/ 
 RUN bundle install
+ADD update_notebooks.rb /home/jovyan
+RUN ruby /home/jovyan/update_notebooks.rb
 # smoke test that it's importable at least
 RUN sh /srv/singleuser/singleuser_ruby.sh -h
 CMD ["sh", "/srv/singleuser/singleuser_ruby.sh"]
