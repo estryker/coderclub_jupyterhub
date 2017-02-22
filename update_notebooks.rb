@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 
+=begin rdoc
+update_notebooks - go to the coderclub repo on github to get the latest version of the ipython notebook files. 
+=end
+
 require 'opt_simple'
 require 'github_api'
-require 'openssl'
 
 defaults = {
   github_user: "estryker",
@@ -30,7 +33,7 @@ file_pattern = "\.ipynb$"
 if opts.include? "lesson-num"
   file_pattern = "lesson#{sprintf('%02d',opts.lesson_num)}.*" + file_pattern
 end
-puts "file pattern: " + file_pattern
+
 regexp = Regexp.compile(file_pattern)
 
 github.repos.contents.get(user: opts.github_user, repo: opts.github_repo, path: opts.github_path).find_all {|f| f['path'].match(regexp)}.each do | file |
@@ -38,7 +41,6 @@ github.repos.contents.get(user: opts.github_user, repo: opts.github_repo, path: 
   github_file = File.basename(file["path"])
   if File.readable? github_file
     digest = `git hash-object #{github_file}`.strip # this is a sha1 aftre prefixing 'blob length_of_file\0'
-    puts digest
     if file["sha"] == digest
       puts "#{file['path']} is already up-to-date"
       new_file_exists = false
